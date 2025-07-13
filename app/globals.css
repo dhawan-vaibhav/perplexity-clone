@@ -1,0 +1,177 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@custom-variant dark (&:is(.dark *));
+
+@layer base {
+  :root {
+    /* Perplexity exact sidebar colors */
+    --sidebar-background: 243 243 238; /* #f3f3ee */
+    --sidebar-foreground: 19 52 59; /* #13343b */
+    --sidebar-primary: 33 128 141;
+    --sidebar-primary-foreground: 255 255 255;
+    --sidebar-accent: 235 235 230; /* Hover state */
+    --sidebar-accent-foreground: 19 52 59;
+    --sidebar-border: 229 229 224;
+    --sidebar-ring: 33 128 141;
+  }
+
+  .dark {
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+
+@theme inline {
+  --color-background: rgb(var(--background));
+  --color-foreground: rgb(var(--foreground));
+  --font-sans: var(--font-space-grotesk);
+  --color-sidebar-ring: rgb(var(--sidebar-ring));
+  --color-sidebar-border: rgb(var(--sidebar-border));
+  --color-sidebar-accent-foreground: rgb(var(--sidebar-accent-foreground));
+  --color-sidebar-accent: rgb(var(--sidebar-accent));
+  --color-sidebar-primary-foreground: rgb(var(--sidebar-primary-foreground));
+  --color-sidebar-primary: rgb(var(--sidebar-primary));
+  --color-sidebar-foreground: rgb(var(--sidebar-foreground));
+  --color-sidebar-background: rgb(var(--sidebar-background));
+  --color-chart-5: rgb(var(--chart-5));
+  --color-chart-4: rgb(var(--chart-4));
+  --color-chart-3: rgb(var(--chart-3));
+  --color-chart-2: rgb(var(--chart-2));
+  --color-chart-1: rgb(var(--chart-1));
+  --color-ring: rgb(var(--ring));
+  --color-input: rgb(var(--input));
+  --color-border: rgb(var(--border));
+  --color-destructive: rgb(var(--destructive));
+  --color-accent-foreground: rgb(var(--accent-foreground));
+  --color-accent: rgb(var(--accent));
+  --color-muted-foreground: rgb(var(--muted-foreground));
+  --color-muted: rgb(var(--muted));
+  --color-secondary-foreground: rgb(var(--secondary-foreground));
+  --color-secondary: rgb(var(--secondary));
+  --color-primary-foreground: rgb(var(--primary-foreground));
+  --color-primary: rgb(var(--primary));
+  --color-popover-foreground: rgb(var(--popover-foreground));
+  --color-popover: rgb(var(--popover));
+  --color-card-foreground: rgb(var(--card-foreground));
+  --color-card: rgb(var(--card));
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.625rem;
+  /* Perplexity-inspired color scheme - Clean, invisible design */
+  --background: 255 255 255; /* Pure white background */
+  --foreground: 19 52 59; /* #13343b - Perplexity text color */
+  --card: 255 255 255; /* White cards */
+  --card-foreground: 19 52 59; /* Perplexity text on cards */
+  --popover: 255 255 255; /* White popovers */
+  --popover-foreground: 19 52 59; /* Perplexity text on popovers */
+  --primary: 33 128 141; /* Perplexity teal #21808D */
+  --primary-foreground: 255 255 255; /* White text on primary */
+  --secondary: 248 250 252; /* Very light gray */
+  --secondary-foreground: 51 65 85; /* Slate text */
+  --muted: 248 250 252; /* Light gray muted areas */
+  --muted-foreground: 100 116 139; /* Muted text */
+  --accent: 241 245 249; /* Light accent */
+  --accent-foreground: 51 65 85; /* Dark accent text */
+  --destructive: 239 68 68; /* Red for destructive actions */
+  --border: 229 231 235; /* Light border */
+  --input: 255 255 255; /* White input backgrounds */
+  --ring: 33 128 141; /* Teal focus ring */
+  --chart-1: 33 128 141; /* Teal for charts */
+  --chart-2: 99 102 241; /* Blue */
+  --chart-3: 16 185 129; /* Green */
+  --chart-4: 245 158 11; /* Orange */
+  --chart-5: 239 68 68; /* Red */
+  /* Sidebar colors - Perplexity exact colors */
+  --sidebar-background: 243 243 238; /* #f3f3ee - Perplexity sidebar background */
+  --sidebar-foreground: 19 52 59; /* #13343b - Perplexity text color */
+  --sidebar-primary: 33 128 141; /* Teal for active items */
+  --sidebar-primary-foreground: 255 255 255; /* White text on active */
+  --sidebar-accent: 235 235 230; /* Slightly darker than background for hover */
+  --sidebar-accent-foreground: 19 52 59; /* Same text color on hover */
+  --sidebar-border: 229 229 224; /* Subtle border */
+  --sidebar-ring: 33 128 141; /* Teal focus ring */
+}
+
+.dark {
+  --background: oklch(0.129 0.042 264.695);
+  --foreground: oklch(0.984 0.003 247.858);
+  --card: oklch(0.208 0.042 265.755);
+  --card-foreground: oklch(0.984 0.003 247.858);
+  --popover: oklch(0.208 0.042 265.755);
+  --popover-foreground: oklch(0.984 0.003 247.858);
+  --primary: oklch(0.929 0.013 255.508);
+  --primary-foreground: oklch(0.208 0.042 265.755);
+  --secondary: oklch(0.279 0.041 260.031);
+  --secondary-foreground: oklch(0.984 0.003 247.858);
+  --muted: oklch(0.279 0.041 260.031);
+  --muted-foreground: oklch(0.704 0.04 256.788);
+  --accent: oklch(0.95 0.0067 115.71);
+  --accent-foreground: oklch(0.984 0.003 247.858);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.551 0.027 264.364);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.208 0.042 265.755);
+  --sidebar-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-accent: oklch(0.279 0.041 260.031);
+  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.551 0.027 264.364);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Line clamp utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
