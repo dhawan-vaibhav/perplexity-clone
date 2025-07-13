@@ -16,6 +16,7 @@ function presenter() {
       type: 'thread_created' as const,
       data: {
         threadId: thread.id,
+        userId: thread.userId,
         title: thread.title,
         createdAt: thread.createdAt.toISOString(),
       },

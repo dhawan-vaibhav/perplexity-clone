@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    let results: Array<{ title: string; content: string; url: string }> = [];
+    let results: Array<{ title: string; content: string; url: string; thumbnail?: string }> = [];
 
     try {
       // Get the composite search engine service

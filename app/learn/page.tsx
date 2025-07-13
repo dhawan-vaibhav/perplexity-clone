@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { VocabularyContent } from '../../src/entities/models/vocabulary';
 import { ArrowLeft, BookOpen, Volume2, Copy, CheckCircle, Sparkles, Clock } from 'lucide-react';
 import { LearnIcon } from '../../components/icons/LearnIcon';
@@ -17,7 +17,7 @@ interface VocabularyEntry {
   updatedAt: string;
 }
 
-export default function LearnPage() {
+function LearnContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { setShowGridBackground } = useBackground();
@@ -421,5 +421,15 @@ export default function LearnPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LearnPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    </div>}>
+      <LearnContent />
+    </Suspense>
   );
 }

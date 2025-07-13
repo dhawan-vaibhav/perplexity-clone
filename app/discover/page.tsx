@@ -132,10 +132,12 @@ export default function DiscoverPage() {
         },
       });
       
-      const data: DiscoverResponse = await res.json();
       if (!res.ok) {
-        throw new Error(data.message || 'Failed to fetch data');
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Failed to fetch data');
       }
+      
+      const data: DiscoverResponse = await res.json();
       
       setCategories(data.availableCategories);
       setDiscoverData({ top: data.blogs });

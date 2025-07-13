@@ -43,7 +43,7 @@ export default function MessageContent({ content, searchResults = [], vocabulary
       // Updated to handle any punctuation, not just quotes
       const invisibleMarkerRegex = /(\w+)([^a-zA-Z0-9]*)\u200C\u200D/g;
       let found = false;
-      let foundWords = [];
+      let foundWords: string[] = [];
       processed = processed.replace(invisibleMarkerRegex, (match, word, punctuation) => {
         foundWords.push(word);
         found = true;

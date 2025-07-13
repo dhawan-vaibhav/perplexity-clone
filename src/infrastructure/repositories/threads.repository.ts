@@ -9,14 +9,14 @@ export class ThreadsRepository implements IThreadRepository {
     const [newThread] = await db
       .insert(threads)
       .values({
-        userId: thread.userId,
+        userId: thread.userId || '',
         title: thread.title,
       })
       .returning();
 
     return {
       id: newThread.id,
-      userId: newThread.userId,
+      userId: newThread.userId || '',
       title: newThread.title,
       createdAt: newThread.createdAt,
       updatedAt: newThread.updatedAt,
@@ -33,7 +33,7 @@ export class ThreadsRepository implements IThreadRepository {
 
     return {
       id: thread.id,
-      userId: thread.userId,
+      userId: thread.userId || '',
       title: thread.title,
       createdAt: thread.createdAt,
       updatedAt: thread.updatedAt,
@@ -50,7 +50,7 @@ export class ThreadsRepository implements IThreadRepository {
 
     return results.map(thread => ({
       id: thread.id,
-      userId: thread.userId,
+      userId: thread.userId || '',
       title: thread.title,
       createdAt: thread.createdAt,
       updatedAt: thread.updatedAt,
@@ -68,7 +68,7 @@ export class ThreadsRepository implements IThreadRepository {
 
     return results.map(thread => ({
       id: thread.id,
-      userId: thread.userId,
+      userId: thread.userId || '',
       title: thread.title,
       createdAt: thread.createdAt,
       updatedAt: thread.updatedAt,

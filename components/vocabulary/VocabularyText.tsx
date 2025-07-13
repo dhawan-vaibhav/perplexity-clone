@@ -75,7 +75,7 @@ const VocabularyText: React.FC<VocabularyTextProps> = ({
   // Instead of processing segments, let's replace vocabulary words with placeholder markers
   // and let the renderContent function handle the full text with placeholders
   
-  let processedContent = content;
+  // Re-using processedContent from above
   const placeholders: { [key: string]: React.ReactNode } = {};
   
   sortedReplacements.forEach((replacement, index) => {

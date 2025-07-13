@@ -147,6 +147,7 @@ export const useSearch = (initialThreadId?: string): UseSearchReturn => {
                   // Update thread info
                   setCurrentThread({
                     id: event.data.threadId,
+                    userId: event.data.userId,
                     title: event.data.title,
                     createdAt: new Date(event.data.createdAt),
                     updatedAt: new Date(event.data.createdAt),
