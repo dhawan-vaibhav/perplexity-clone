@@ -24,24 +24,6 @@ const models = [
     description: "Fast and efficient responses",
     section: "recommended",
   },
-  {
-    id: "gemini-pro",
-    name: "Gemini Pro",
-    description: "Advanced reasoning capabilities",
-    section: "general",
-  },
-  {
-    id: "gpt-4o-mini",
-    name: "GPT-4o Mini",
-    description: "OpenAI's efficient model",
-    section: "general",
-  },
-  {
-    id: "gpt-4o",
-    name: "GPT-4o",
-    description: "OpenAI's advanced model",
-    section: "general",
-  },
 ]
 
 const searchEngines = [

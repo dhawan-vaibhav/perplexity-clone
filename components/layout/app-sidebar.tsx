@@ -14,6 +14,7 @@ import {
 import Image from 'next/image'
 import { Compass, GalleryHorizontalEnd, Search } from 'lucide-react'
 import { usePathname } from 'next/navigation'
+import { LearnIcon } from '../icons/LearnIcon'
 
 
 const MenuOptions = [
@@ -31,6 +32,11 @@ const MenuOptions = [
         title: 'Library',
         icon: GalleryHorizontalEnd,
         path: '/library'
+    },
+    {
+        title: 'Learn',
+        icon: LearnIcon,
+        path: '/learn'
     },
 
 ]

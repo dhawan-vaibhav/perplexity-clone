@@ -72,6 +72,13 @@ export class VocabularyRepository implements IVocabularyRepository {
         userId: entry.userId,
         content: entry.content,
       })
+      .onConflictDoUpdate({
+        target: [vocabularyEntries.word, vocabularyEntries.threadItemId],
+        set: {
+          content: entry.content,
+          updatedAt: new Date(),
+        },
+      })
       .returning();
 
     const created = result[0];

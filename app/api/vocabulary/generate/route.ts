@@ -4,8 +4,9 @@ import { auth } from '@clerk/nextjs/server';
 import { container } from '../../../../di/container';
 import { SYMBOLS } from '../../../../di/symbols';
 import { IVocabularyRepository } from '../../../../src/application/repositories/IVocabularyRepository';
-import { ILLMService } from '../../../../src/application/services/ILLMService';
 import { VocabularyContent } from '../../../../src/entities/models/vocabulary';
+import { google } from '@ai-sdk/google';
+import { generateText } from 'ai';
 
 const VOCABULARY_GENERATION_PROMPT = `
 You are an expert vocabulary teacher. Generate comprehensive learning content for a word that appeared in a user's search results.
@@ -49,7 +50,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { word, threadItemId, searchContext, usageContext } = body;
+    const { word, threadItemId, searchContext, usageContext, model = 'gemini-flash' } = body;
 
     if (!word || !threadItemId) {
       return Response.json(
@@ -79,6 +80,7 @@ export async function POST(request: NextRequest) {
       console.log(`🔄 Word exists for user, reusing content: ${word}`);
       
       // Create new entry linking to this threadItem but reuse content
+      // This will now use UPSERT, so no duplicate key error
       await vocabularyRepository.create({
         word,
         threadItemId,
@@ -92,37 +94,69 @@ export async function POST(request: NextRequest) {
     // 3. Generate new vocabulary content via LLM
     console.log(`🎯 Generating new vocabulary content for: ${word}`);
     
-    const llmService = container.get<ILLMService>(SYMBOLS.LLMService);
-    
     const prompt = VOCABULARY_GENERATION_PROMPT
       .replace('{word}', word)
       .replace('{searchContext}', searchContext || 'General context')
       .replace('{usageContext}', usageContext || 'No specific usage context');
 
-    const llmResponse = await llmService.generateResponse(prompt, 'gpt-4o-mini');
-    
-    // Parse LLM response
-    let vocabularyContent: VocabularyContent;
     try {
-      vocabularyContent = JSON.parse(llmResponse);
-    } catch (parseError) {
-      console.error('Failed to parse LLM response:', parseError);
+      // Map model selection to appropriate provider
+      const modelMap = {
+        'gemini-flash': google('gemini-1.5-flash'),
+      };
+      
+      const selectedModel = modelMap[model as keyof typeof modelMap] || google('gemini-1.5-flash');
+      
+      const { text } = await generateText({
+        model: selectedModel,
+        prompt: prompt,
+        temperature: 0.7,
+        maxTokens: 500,
+      });
+
+      // Parse LLM response
+      let vocabularyContent: VocabularyContent;
+      try {
+        // Remove markdown code blocks if present
+        let cleanedText = text.trim();
+        if (cleanedText.startsWith('```json')) {
+          cleanedText = cleanedText.slice(7); // Remove ```json
+        } else if (cleanedText.startsWith('```')) {
+          cleanedText = cleanedText.slice(3); // Remove ```
+        }
+        if (cleanedText.endsWith('```')) {
+          cleanedText = cleanedText.slice(0, -3); // Remove closing ```
+        }
+        cleanedText = cleanedText.trim();
+        
+        vocabularyContent = JSON.parse(cleanedText);
+      } catch (parseError) {
+        console.error('Failed to parse LLM response:', parseError);
+        console.error('Raw response:', text);
+        return Response.json(
+          { error: 'Failed to parse vocabulary content' },
+          { status: 500 }
+        );
+      }
+
+      // 4. Save to database (UPSERT - will update if exists)
+      const newEntry = await vocabularyRepository.create({
+        word,
+        threadItemId,
+        userId,
+        content: vocabularyContent
+      });
+
+      console.log(`💾 Saved vocabulary entry: ${word}`);
+      return Response.json(vocabularyContent);
+      
+    } catch (llmError) {
+      console.error('LLM generation error:', llmError);
       return Response.json(
         { error: 'Failed to generate vocabulary content' },
         { status: 500 }
       );
     }
-
-    // 4. Save to database
-    const newEntry = await vocabularyRepository.create({
-      word,
-      threadItemId,
-      userId,
-      content: vocabularyContent
-    });
-
-    console.log(`💾 Saved new vocabulary entry: ${word}`);
-    return Response.json(vocabularyContent);
 
   } catch (error) {
     console.error('Vocabulary generation error:', error);

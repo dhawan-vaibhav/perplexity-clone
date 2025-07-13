@@ -1,19 +1,26 @@
 'use client';
 
+import React from 'react';
 import { useRouter } from 'next/navigation';
 
 interface VocabularyLinkProps {
   word: string;
   threadItemId: string;
+  threadId?: string;
   searchQuery?: string;
   context?: string;
+  model?: string;
+  children?: React.ReactNode;
 }
 
-const VocabularyLink: React.FC<VocabularyLinkProps> = ({
+const VocabularyLink: React.FC<VocabularyLinkProps> = React.memo(({
   word,
   threadItemId,
+  threadId,
   searchQuery,
-  context
+  context,
+  model,
+  children
 }) => {
   const router = useRouter();
 
@@ -21,22 +28,26 @@ const VocabularyLink: React.FC<VocabularyLinkProps> = ({
     const params = new URLSearchParams({
       word,
       threadItemId,
+      ...(threadId && { threadId }),
       ...(searchQuery && { searchQuery }),
-      ...(context && { context })
+      ...(context && { context }),
+      ...(model && { model })
     });
     
     router.push(`/learn?${params.toString()}`);
   };
 
   return (
-    <button
+    <span
       onClick={handleClick}
-      className="underline decoration-blue-400 decoration-2 underline-offset-2 hover:decoration-blue-600 transition-colors cursor-pointer bg-transparent border-none p-0 font-inherit text-inherit"
+      className="text-blue-600 hover:text-blue-800 cursor-pointer font-medium"
       title={`Learn about "${word}"`}
     >
-      {word}
-    </button>
+      {children || word}
+    </span>
   );
-};
+});
+
+VocabularyLink.displayName = 'VocabularyLink';
 
 export default VocabularyLink;

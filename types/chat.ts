@@ -12,6 +12,7 @@ export interface ChatMessage {
   threadItemId?: string; // Add this for vocabulary link navigation
   isComplete?: boolean;
   createdAt: Date;
+  model?: string; // Track which model was used
 }
 
 export interface StreamEvent {

@@ -81,6 +81,10 @@ export default function MessageBox({ message, isLast, isLoading }: MessageBoxPro
               <MessageContent 
                 content={message.content} 
                 searchResults={message.searchResults}
+                vocabulary={message.vocabulary}
+                threadItemId={message.threadItemId}
+                threadId={message.threadId}
+                model={message.model}
               />
             ) : isLast && isLoading ? (
               <div className="text-gray-500 dark:text-gray-400 italic">Generating response...</div>

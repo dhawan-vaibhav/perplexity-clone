@@ -8,6 +8,7 @@ import React, { type ReactNode } from 'react';
 import Image from 'next/image';
 import GridBackground from '../ui/grid-background';
 import { useBackground } from '../../contexts/BackgroundContext';
+import { LearnIcon } from '../icons/LearnIcon';
 
 
 
@@ -41,6 +42,10 @@ const LibraryIcon = ({ className }: { className?: string }) => (
   />
 );
 
+const LearnIconWrapper = ({ className }: { className?: string }) => (
+  <LearnIcon className={className} width={20} height={20} />
+);
+
 const Sidebar = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const { showGridBackground } = useBackground();
@@ -63,6 +68,12 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
       href: '/library',
       active: pathname.startsWith('/library'),
       label: 'Library',
+    },
+    {
+      icon: LearnIconWrapper,
+      href: '/learn',
+      active: pathname.startsWith('/learn'),
+      label: 'Learn',
     },
   ];
 

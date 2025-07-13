@@ -119,7 +119,7 @@ export const createSearchController =
 
       await manageThreadItemUseCase.updateWithSearchResults(threadItem.id, searchResults);
 
-      // Step 4: Generate LLM response (streaming)
+      // Step 4: Generate LLM response (clean streaming)
       let fullResponse = '';
       
       try {
@@ -136,19 +136,61 @@ export const createSearchController =
         // Step 5: Extract citations from response
         const citations = citationExtractionService.extractCitations(fullResponse, searchResults);
 
-        // Step 6: Complete thread item with citations
-        const completedItem = await manageThreadItemUseCase.completeItemWithCitations(
+        // Step 6: Extract vocabulary from markers
+        const vocabulary: VocabularyWord[] = [];
+        
+        // Try invisible marker pattern first (with optional quotes)
+        const invisibleMarkerRegex = /(\b\w+)["\']?\u200C\u200D/g;
+        let match;
+        while ((match = invisibleMarkerRegex.exec(fullResponse)) !== null) {
+          const word = match[1];
+          console.log('🔍 Server: Found vocabulary word with invisible markers:', word);
+          vocabulary.push({
+            word,
+            position: match.index,
+            context: fullResponse.substring(Math.max(0, match.index - 50), Math.min(fullResponse.length, match.index + 50))
+          });
+        }
+        
+        // If no invisible markers found, try bracket notation
+        if (vocabulary.length === 0) {
+          const bracketPattern = /(\b\w+)⟨ZWNJ⟩⟨ZWJ⟩/g;
+          while ((match = bracketPattern.exec(fullResponse)) !== null) {
+            const word = match[1];
+            console.log('🔍 Server: Found vocabulary word with bracket notation:', word);
+            vocabulary.push({
+              word,
+              position: match.index,
+              context: fullResponse.substring(Math.max(0, match.index - 50), Math.min(fullResponse.length, match.index + 50))
+            });
+          }
+        }
+        
+        if (vocabulary.length === 0) {
+          console.log('🔍 Server: No vocabulary found');
+        } else {
+          console.log(`🎯 Server: Found ${vocabulary.length} vocabulary words:`, vocabulary.map(v => v.word));
+        }
+
+        // Step 7: Complete thread item with original response (LLM already added markers)
+        const completedItem = await manageThreadItemUseCase.completeItemWithCitationsAndVocabulary(
           threadItem.id, 
-          fullResponse,
-          citations
+          fullResponse, // Use original response with invisible markers
+          citations,
+          vocabulary
         );
 
-        // Step 7: Send citations to frontend
+        // Step 9: Send vocabulary to frontend
+        if (vocabulary.length > 0) {
+          yield format.formatVocabulary(vocabulary);
+        }
+
+        // Step 10: Send citations to frontend
         if (citations.length > 0) {
           yield format.formatCitations(citations);
         }
 
-        // Step 8: Send completion
+        // Step 11: Send completion
         yield format.formatComplete(completedItem);
 
       } catch (llmError) {

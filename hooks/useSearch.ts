@@ -122,6 +122,7 @@ export const useSearch = (initialThreadId?: string): UseSearchReturn => {
         citations: [],
         isComplete: false,
         createdAt: new Date(),
+        model: options?.model || 'gemini-flash',
       };
 
       let messageAdded = false;
@@ -211,7 +212,7 @@ export const useSearch = (initialThreadId?: string): UseSearchReturn => {
                       ? { 
                           ...msg, 
                           isComplete: true,
-                          threadItemId: event.data.threadItemId // Add threadItemId for vocabulary navigation
+                          threadItemId: event.data.threadItemId
                         }
                       : msg
                   ));
