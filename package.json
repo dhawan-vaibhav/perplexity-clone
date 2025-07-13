@@ -6,7 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:generate": "drizzle-kit generate:pg",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push:pg",
+    "postinstall": "npm run db:push"
   },
   "dependencies": {
     "@ai-sdk/google": "^1.2.22",
