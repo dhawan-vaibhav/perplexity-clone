@@ -6,8 +6,19 @@ import { SYMBOLS } from '../../../di/symbols';
 import { ISearchController } from '../../../src/interface-adapters/controllers/search-controller';
 
 async function handleSearch(body: Record<string, unknown>) {
-  // Get the search controller from DI container
-  const searchController = container.get<ISearchController>(SYMBOLS.SearchController);
+  console.log('🔍 Attempting to get search controller from DI container');
+  let searchController;
+  try {
+    // Get the search controller from DI container
+    searchController = container.get<ISearchController>(SYMBOLS.SearchController);
+    console.log('✅ Search controller retrieved successfully');
+  } catch (error) {
+    console.error('❌ Failed to get search controller:', error);
+    console.error('Error name:', error instanceof Error ? error.name : 'Unknown');
+    console.error('Error message:', error instanceof Error ? error.message : 'Unknown');
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack');
+    throw error;
+  }
   
   // Create streaming response
   const encoder = new TextEncoder();

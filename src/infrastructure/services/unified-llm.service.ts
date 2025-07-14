@@ -19,7 +19,19 @@ export class UnifiedLLMService implements ILLMService {
   private readonly promptService: PromptTemplateService;
 
   constructor() {
-    this.promptService = new PromptTemplateService();
+    console.log('🔍 UnifiedLLMService: Starting initialization');
+    try {
+      this.promptService = new PromptTemplateService();
+      console.log('✅ UnifiedLLMService: PromptTemplateService created successfully');
+    } catch (error) {
+      console.error('❌ UnifiedLLMService: Failed to create PromptTemplateService:', error);
+      console.error('Error details:', {
+        name: error instanceof Error ? error.name : 'Unknown',
+        message: error instanceof Error ? error.message : 'Unknown',
+        stack: error instanceof Error ? error.stack : 'No stack'
+      });
+      throw error;
+    }
   }
 
   async *generateAnswer(
