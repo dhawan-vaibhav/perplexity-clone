@@ -1,4 +1,5 @@
 import nunjucks from 'nunjucks';
+import fs from 'fs';
 import path from 'path';
 import { SearchResult } from '../../entities/models/thread-item';
 
@@ -9,40 +10,47 @@ export interface PromptVariables {
 }
 
 export class PromptTemplateService {
-  private env: nunjucks.Environment;
+  private templates: Map<string, nunjucks.Template> = new Map();
 
   constructor() {
     console.log('🔍 PromptTemplateService: Starting initialization');
-    console.log('Current working directory:', process.cwd());
-    
-    const templatePath = path.join(process.cwd(), 'src', 'prompts');
-    console.log('Template path:', templatePath);
     
     try {
-      console.log('Creating nunjucks Environment...');
-      console.log('nunjucks object:', typeof nunjucks);
-      console.log('nunjucks.Environment:', typeof nunjucks.Environment);
-      console.log('nunjucks.FileSystemLoader:', typeof nunjucks.FileSystemLoader);
+      console.log('Loading template files...');
       
-      // Create environment instance directly
-      this.env = new nunjucks.Environment(
-        new nunjucks.FileSystemLoader(templatePath),
-        {
-          autoescape: false,
-          trimBlocks: true,
-          lstripBlocks: true,
-        }
-      );
-      console.log('✅ PromptTemplateService: Environment created successfully');
+      // Pre-load and compile templates
+      const templatePath = path.join(process.cwd(), 'src', 'prompts', 'search-basic.njk');
+      console.log('Template path:', templatePath);
+      
+      const templateContent = fs.readFileSync(templatePath, 'utf8');
+      console.log('Template loaded, length:', templateContent.length);
+      
+      // Configure nunjucks without FileSystemLoader
+      nunjucks.configure({ 
+        autoescape: false,
+        trimBlocks: true,
+        lstripBlocks: true,
+      });
+      
+      // Compile the template
+      const compiledTemplate = nunjucks.compile(templateContent);
+      this.templates.set('search-basic.njk', compiledTemplate);
+      
+      console.log('✅ PromptTemplateService: Template compiled successfully');
     } catch (error) {
-      console.error('❌ PromptTemplateService: Failed to create environment:', error);
+      console.error('❌ PromptTemplateService: Failed to initialize:', error);
       throw error;
     }
   }
 
   renderTemplate(templateName: string, variables: PromptVariables): string {
     try {
-      return this.env.render(templateName, variables);
+      const template = this.templates.get(templateName);
+      if (!template) {
+        throw new Error(`Template ${templateName} not found`);
+      }
+      
+      return template.render(variables);
     } catch (error) {
       throw new Error(`Failed to render template ${templateName}: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
