@@ -1,4 +1,4 @@
-import nunjucks from 'nunjucks';
+const nunjucks = require('nunjucks');
 import fs from 'fs';
 import path from 'path';
 import { SearchResult } from '../../entities/models/thread-item';
@@ -10,7 +10,7 @@ export interface PromptVariables {
 }
 
 export class PromptTemplateService {
-  private templates: Map<string, nunjucks.Template> = new Map();
+  private templates: Map<string, any> = new Map();
 
   constructor() {
     console.log('🔍 PromptTemplateService: Starting initialization');
