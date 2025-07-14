@@ -3,9 +3,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   webpack: (config, { isServer }) => {
     if (isServer) {
-      // Exclude fsevents from client-side bundle
+      // Exclude fsevents and nunjucks from server-side bundle
       config.externals = config.externals || [];
       config.externals.push('fsevents');
+      config.externals.push('nunjucks');
     }
     
     // Ignore nunjucks and fsevents in client-side builds
