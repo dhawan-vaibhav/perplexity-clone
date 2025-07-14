@@ -85,15 +85,24 @@ export async function POST(request: NextRequest) {
     console.log('🔍 Search API - Step 2: Getting userId from auth');
     const { userId } = await auth();
     
-    console.log('🔍 Search API - userId:', userId);
-    
-    if (!userId) {
-      console.log('❌ Search API - No userId found');
+    console.log('🔍 Search API - Step 3 - userId:', userId);
+
+    try {
+      if (!userId) {
+        console.log('❌ Search API - No userId found');
+        return Response.json(
+          { error: 'Unauthorized' },
+          { status: 401 }
+        );
+      }
+    } catch (error) {
+      console.error('❌ Search API - Error in userId check:', error);
       return Response.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
+        { error: 'Internal server error' },
+        { status: 500 }
       );
     }
+    
     
     console.log('🔍 Search API - Step 3: Parsing request body');
     // Parse request body
