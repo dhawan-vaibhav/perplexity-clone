@@ -2,26 +2,22 @@ import { SearchResult } from '../../entities/models/thread-item';
 import { SearchProvider } from '../../entities/models/search-query';
 import { ISearchEngineService } from '../../application/services/ISearchEngineService';
 import { BraveSearchService } from './brave-search.service';
-import { SearXNGSearchService } from './searxng-search.service';
 import { ExaSearchService } from './exa-search.service';
 
 export class CompositeSearchService implements ISearchEngineService {
   private readonly braveService: BraveSearchService;
-  private readonly searxngService: SearXNGSearchService;
   private readonly exaService: ExaSearchService | null;
 
   constructor() {
     // Initialize services based on available configuration
     const braveApiKey = process.env.BRAVE_SEARCH_API_KEY;
     const exaApiKey = process.env.EXA_API_KEY;
-    const searxngUrl = process.env.SEARXNG_URL;
 
     if (!braveApiKey) {
       throw new Error('BRAVE_SEARCH_API_KEY environment variable is required');
     }
 
     this.braveService = new BraveSearchService(braveApiKey);
-    this.searxngService = new SearXNGSearchService(searxngUrl);
     this.exaService = exaApiKey ? new ExaSearchService(exaApiKey) : null;
   }
 
@@ -38,10 +34,6 @@ export class CompositeSearchService implements ISearchEngineService {
       switch (provider) {
         case 'brave':
           yield* this.braveService.search(query, searchProvider, options);
-          break;
-          
-        case 'searxng':
-          yield* this.searxngService.search(query, searchProvider, options);
           break;
           
         case 'exa':
@@ -65,7 +57,7 @@ export class CompositeSearchService implements ISearchEngineService {
 
   // Method to get available search providers
   getAvailableProviders(): SearchProvider[] {
-    const providers: SearchProvider[] = ['brave', 'searxng'];
+    const providers: SearchProvider[] = ['brave'];
     if (this.exaService) {
       providers.push('exa');
     }

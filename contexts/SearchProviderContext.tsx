@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-type SearchProvider = 'brave' | 'searxng' | 'exa';
+type SearchProvider = 'brave' | 'exa';
 
 interface SearchProviderContextType {
   searchProvider: SearchProvider;
@@ -21,7 +21,7 @@ export function SearchProviderProvider({ children }: SearchProviderProviderProps
   // Load saved preference from localStorage
   useEffect(() => {
     const saved = localStorage.getItem('searchProvider') as SearchProvider;
-    if (saved && ['brave', 'searxng', 'exa'].includes(saved)) {
+    if (saved && ['brave', 'exa'].includes(saved)) {
       setSearchProviderState(saved);
     }
   }, []);

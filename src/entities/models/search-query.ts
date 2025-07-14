@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const searchProviderSchema = z.enum(['brave', 'exa', 'searxng']);
+export const searchProviderSchema = z.enum(['brave', 'exa']);
 
 // Simplified - just model selection now
 export const searchQuerySchema = z.object({

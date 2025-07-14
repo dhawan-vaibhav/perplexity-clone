@@ -34,12 +34,6 @@ const searchEngines = [
     section: "default",
   },
   {
-    id: "searxng",
-    name: "SearXNG",
-    description: "Open-source metasearch engine",
-    section: "search",
-  },
-  {
     id: "exa",
     name: "Exa",
     description: "AI-powered semantic search",
