@@ -13,8 +13,6 @@ An advanced AI-powered search assistant that combines real-time web search with 
 - **AI-Powered Responses**: Leverages Google's Gemini 1.5 Flash model for intelligent, context-aware answers
 - **Real-Time Web Search**: Integrates with multiple search providers (Brave, SearXNG, Exa)
 - **Citation Support**: Every response includes numbered citations linking to source materials
-- **Conversation Threading**: Maintains context across multiple queries in a single thread
-- **Follow-up Questions**: Seamlessly ask follow-up questions with maintained context
 
 ### Vocabulary Learning System
 - **Smart Word Detection**: Automatically identifies educational vocabulary in responses
@@ -26,6 +24,13 @@ An advanced AI-powered search assistant that combines real-time web search with 
   - Context from original search
 - **Personal Vocabulary Library**: Access all your learned words in one place
 - **Progress Tracking**: Monitor your vocabulary learning journey over time
+
+### Discover Page
+- **Trending Content**: Browse curated articles and trending topics across multiple categories
+- **Category Navigation**: Explore content in Technology, Science, Business, Health, and more
+- **Smart Caching**: Fast loading with intelligent session-based content caching
+- **Visual Cards**: Beautiful card-based layout with thumbnails and snippets
+- **External Links**: Direct access to original sources with favicon indicators
 
 ### User Experience
 - **Clean, Modern Interface**: Minimalist design focused on readability
@@ -46,9 +51,6 @@ An advanced AI-powered search assistant that combines real-time web search with 
 - **Framework**: Next.js 15.3.5 with App Router
 - **Language**: TypeScript 5.0
 - **Styling**: Tailwind CSS 3.4 with custom design system
-- **UI Components**: Radix UI primitives with shadcn/ui styling
-- **State Management**: Zustand for global state, React hooks for local state
-- **Animations**: Framer Motion for smooth transitions
 
 ### Backend
 - **API Routes**: Next.js API routes with TypeScript
@@ -61,7 +63,6 @@ An advanced AI-powered search assistant that combines real-time web search with 
 ### Infrastructure
 - **Search Providers**: 
   - Brave Search API
-  - SearXNG (self-hosted option)
   - Exa AI-powered search
 - **Dependency Injection**: InversifyJS for clean architecture
 - **Template Engine**: Nunjucks for prompt management
@@ -78,7 +79,7 @@ Before you begin, ensure you have the following installed:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/my-perplexity-clone.git
+   git clone git@github.com:dhawan-vaibhav/perplexity-clone.git
    cd my-perplexity-clone
    ```
 
@@ -107,7 +108,6 @@ Before you begin, ensure you have the following installed:
    
    # Search Providers (at least one required)
    BRAVE_SEARCH_API_KEY=your_brave_api_key
-   SEARXNG_URL=http://localhost:8080  # If using SearXNG
    EXA_API_KEY=your_exa_api_key       # If using Exa
 
    # Optional
@@ -140,7 +140,6 @@ Before you begin, ensure you have the following installed:
 Configure your preferred search provider in the UI or set a default in your environment:
 
 - **Brave Search**: Requires API key from [Brave Search API](https://brave.com/search/api/)
-- **SearXNG**: Can be self-hosted or use a public instance
 - **Exa**: Requires API key from [Exa](https://exa.ai)
 
 ### Database Schema
@@ -265,11 +264,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Built with [Next.js](https://nextjs.org)
 - UI components from [shadcn/ui](https://ui.shadcn.com)
 - Icons from [Lucide](https://lucide.dev)
-
-## 📞 Support
-
-For support, please open an issue in the GitHub repository or contact the maintainers.
-
----
 
 Built with ❤️ by Vaibhav Dhawan
