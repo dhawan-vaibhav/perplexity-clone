@@ -1,4 +1,3 @@
-// src/interface-adapters/controllers/SearchController.ts (Updated with Citations)
 import { z } from 'zod';
 import { SearchQuery, searchQuerySchema } from '../../entities/models/search-query';
 import { Thread } from '../../entities/models/thread';
@@ -84,7 +83,6 @@ export const createSearchController =
     const format = presenter();
     
     try {
-      // Input validation
       const { data, error: inputParseError } = inputSchema.safeParse(input);
       
       if (inputParseError) {
@@ -94,7 +92,6 @@ export const createSearchController =
 
       const searchQuery: SearchQuery = data;
 
-      // Step 1: Create or use existing thread
       let threadId = searchQuery.threadId;
       
       if (!threadId) {
@@ -107,10 +104,8 @@ export const createSearchController =
         yield format.formatThreadCreated(thread);
       }
 
-      // Step 2: Create thread item
       const threadItem = await manageThreadItemUseCase.createItem(threadId, searchQuery.query);
 
-      // Step 3: Perform search (streaming individual results)
       const searchResults: SearchResult[] = [];
 
       for await (const searchResult of performSearchUseCase.execute(searchQuery.query, searchQuery.searchProvider)) {
@@ -120,7 +115,6 @@ export const createSearchController =
 
       await manageThreadItemUseCase.updateWithSearchResults(threadItem.id, searchResults);
 
-      // Step 4: Generate LLM response (clean streaming)
       let fullResponse = '';
       
       try {
@@ -134,13 +128,10 @@ export const createSearchController =
           yield format.formatLLMChunk(chunk);
         }
 
-        // Step 5: Extract citations from response
         const citations = citationExtractionService.extractCitations(fullResponse, searchResults);
 
-        // Step 6: Extract vocabulary from markers
         const vocabulary: VocabularyWord[] = [];
         
-        // Try invisible marker pattern first (with optional quotes)
         const invisibleMarkerRegex = /(\b\w+)["\']?\u200C\u200D/g;
         let match;
         while ((match = invisibleMarkerRegex.exec(fullResponse)) !== null) {
@@ -152,7 +143,6 @@ export const createSearchController =
           });
         }
         
-        // If no invisible markers found, try bracket notation
         if (vocabulary.length === 0) {
           const bracketPattern = /(\b\w+)⟨ZWNJ⟩⟨ZWJ⟩/g;
           while ((match = bracketPattern.exec(fullResponse)) !== null) {
@@ -166,29 +156,24 @@ export const createSearchController =
         }
         
 
-        // Step 7: Complete thread item with original response (LLM already added markers)
         const completedItem = await manageThreadItemUseCase.completeItemWithCitationsAndVocabulary(
           threadItem.id, 
-          fullResponse, // Use original response with invisible markers
+          fullResponse,
           citations,
           vocabulary
         );
 
-        // Step 9: Send vocabulary to frontend
         if (vocabulary.length > 0) {
           yield format.formatVocabulary(vocabulary);
         }
 
-        // Step 10: Send citations to frontend
         if (citations.length > 0) {
           yield format.formatCitations(citations);
         }
 
-        // Step 11: Send completion
         yield format.formatComplete(completedItem);
 
       } catch (llmError) {
-        // Simple error handling - just pass through the error message
         const errorMessage = llmError instanceof Error ? llmError.message : 'LLM generation failed';
         yield format.formatError(new Error(errorMessage));
         return;

@@ -22,32 +22,26 @@ export default function MessageContent({ content, searchResults = [], vocabulary
     const citationRegex = /\[(\d+)\]/g;
     let processed = content;
 
-    // Process citations first
     if (searchResults && searchResults.length > 0) {
       processed = content.replace(citationRegex, (match, citationNum) => {
         const num = parseInt(citationNum);
         if (!isNaN(num) && num > 0 && num <= searchResults.length) {
           const source = searchResults[num - 1];
           if (source) {
-            return `<citation-link data-num="${num}" data-url="${source.url}" data-title="${source.title?.replace(/"/g, '&quot;') || ''}" data-snippet="${source.snippet?.replace(/"/g, '&quot;') || ''}" data-favicon="${source.favicon || ''}">${num}</citation-link>`;
+            return `<citation-link data-num="${num}" data-url="${encodeURIComponent(source.url)}" data-title="${encodeURIComponent(source.title || '')}" data-snippet="${encodeURIComponent(source.snippet || '')}" data-favicon="${encodeURIComponent(source.favicon || '')}">${num}</citation-link>`;
           }
         }
         return match;
       });
     }
 
-    // Process vocabulary markers (invisible Unicode markers)
     if (threadItemId) {
-      // Look for words followed by zero-width non-joiner (U+200C) + zero-width joiner (U+200D)
-      // The LLM might put quotes or other punctuation between the word and markers
-      // Updated to handle any punctuation, not just quotes
       const invisibleMarkerRegex = /(\w+)([^a-zA-Z0-9]*)\u200C\u200D/g;
       let found = false;
       let foundWords: string[] = [];
       processed = processed.replace(invisibleMarkerRegex, (match, word, punctuation) => {
         foundWords.push(word);
         found = true;
-        // Keep any punctuation that was between the word and markers
         return `<vocabword data-word="${word}" data-thread-item-id="${threadItemId}">${word}</vocabword>${punctuation}`;
       });
       
@@ -55,13 +49,8 @@ export default function MessageContent({ content, searchResults = [], vocabulary
       }
       
       if (!found) {
-        // Try alternate patterns the LLM might use
-        // Pattern 1: Word followed by literal Unicode names in brackets
-        // First, let's check if the pattern exists
         if (processed.includes('⟨ZWNJ⟩⟨ZWJ⟩')) {
           
-          // Find the word immediately before the markers
-          // This pattern looks for any word characters followed by any non-letter characters, then the markers
           const bracketPattern = /(\w+)([^a-zA-Z]*)⟨ZWNJ⟩⟨ZWJ⟩/g;
           
           processed = processed.replace(bracketPattern, (match, word, punctuation, offset) => {
@@ -75,7 +64,6 @@ export default function MessageContent({ content, searchResults = [], vocabulary
         }
         
         if (!found && processed.includes('\u200C')) {
-          // Debug: find what's actually after the ZWNJ
           const debugIndex = processed.indexOf('\u200C');
           if (debugIndex !== -1) {
             const before = processed.substring(Math.max(0, debugIndex - 20), debugIndex);
@@ -137,10 +125,10 @@ export default function MessageContent({ content, searchResults = [], vocabulary
               component: ({ 'data-num': citationNum, 'data-url': url, 'data-title': title, 'data-snippet': snippet, 'data-favicon': favicon, children }) => {
                 const num = parseInt(citationNum);
                 const source = {
-                  url: url,
-                  title: (typeof title === 'string' ? title.replace(/&quot;/g, '"') : '') || '',
-                  snippet: (typeof snippet === 'string' ? snippet.replace(/&quot;/g, '"') : '') || '',
-                  favicon: favicon || ''
+                  url: url ? decodeURIComponent(url) : '',
+                  title: title ? decodeURIComponent(title) : '',
+                  snippet: snippet ? decodeURIComponent(snippet) : '',
+                  favicon: favicon ? decodeURIComponent(favicon) : ''
                 };
                 
                 return (

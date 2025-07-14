@@ -36,12 +36,10 @@ export default function DiscoverPage() {
   const [hasLoadedData, setHasLoadedData] = useState(false);
   const [loadingCategories, setLoadingCategories] = useState<Set<string>>(new Set());
 
-  // Turn off grid background when on discover page
   useEffect(() => {
     setShowGridBackground(false);
   }, [setShowGridBackground]);
 
-  // Create session-based cache key
   const getCacheKey = (type: 'data' | 'categories') => {
     if (!session?.id) return null;
     return `discover-${type}-${session.id}`;
@@ -75,7 +73,6 @@ export default function DiscoverPage() {
         throw new Error(`Failed to fetch data for category: ${categoryId}`);
       }
       
-      // Update cache
       if (dataKey) {
         const cachedData = sessionStorage.getItem(dataKey);
         const allData = cachedData ? JSON.parse(cachedData) : {};
@@ -106,7 +103,6 @@ export default function DiscoverPage() {
           const parsedData = JSON.parse(cachedData);
           const parsedCategories = JSON.parse(cachedCategories);
           
-          // Only load cached data if we have the top category
           if (parsedData.top) {
             setDiscoverData(parsedData);
             setCategories(parsedCategories);
@@ -118,7 +114,6 @@ export default function DiscoverPage() {
       }
       
       
-      // Fetch top category and available categories
       const res = await fetch(`/api/discover?category=top`, {
         method: 'GET',
         credentials: 'include',
@@ -138,7 +133,6 @@ export default function DiscoverPage() {
       setDiscoverData({ top: data.blogs });
       setHasLoadedData(true);
       
-      // Cache the categories and initial data
       if (dataKey && categoriesKey) {
         sessionStorage.setItem(dataKey, JSON.stringify({ top: data.blogs }));
         sessionStorage.setItem(categoriesKey, JSON.stringify(data.availableCategories));
@@ -161,21 +155,18 @@ export default function DiscoverPage() {
     
     // Check if we already have data for this category
     if (discoverData[categoryId]) {
-      return; // Data already loaded
+      return;
     }
     
-    // Add to loading state
     setLoadingCategories(prev => new Set(prev).add(categoryId));
     
     try {
-      // Fetch data for this category
       const categoryData = await fetchCategoryData(categoryId);
       setDiscoverData(prev => ({
         ...prev,
         [categoryId]: categoryData
       }));
     } finally {
-      // Remove from loading state
       setLoadingCategories(prev => {
         const newSet = new Set(prev);
         newSet.delete(categoryId);
