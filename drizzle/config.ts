@@ -1,4 +1,4 @@
-import { drizzle } from 'drizzle-orm/postgres-js';
+import { drizzle, PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from './schema';
 
@@ -17,11 +17,10 @@ if (process.env.DATABASE_URL) {
   console.error('❌ DATABASE_URL is not defined!');
 }
 
-let client;
-let db;
+let db: PostgresJsDatabase<typeof schema>;
 
 try {
-  client = postgres(process.env.DATABASE_URL!, {
+  const client = postgres(process.env.DATABASE_URL!, {
     max: 1, // Use single connection to avoid transaction issues
     ssl: 'require', // Required for Supabase in production
     connect_timeout: 10, // 10 second timeout
