@@ -1,13 +1,5 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
-  "framework": "nextjs",
-  "env": {
-    "DATABASE_URL": "@database_url",
-    "CLERK_SECRET_KEY": "@clerk_secret_key",
-    "GOOGLE_GENERATIVE_AI_API_KEY": "@google_generative_ai_api_key",
-    "BRAVE_SEARCH_API_KEY": "@brave_search_api_key",
-    "SEARXNG_URL": "@searxng_url",
-    "EXA_API_KEY": "@exa_api_key"
-  }
+  "framework": "nextjs"
 }
