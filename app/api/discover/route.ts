@@ -138,11 +138,9 @@ export async function GET(request: NextRequest) {
             });
           }
         } catch (searchError) {
-          console.log(`Search failed for preview mode`, searchError);
         }
       }
     } catch (serviceError) {
-      console.log('❌ Search service unavailable, using mock data', serviceError);
     }
 
     // Fallback to mock data if search fails or returns no results

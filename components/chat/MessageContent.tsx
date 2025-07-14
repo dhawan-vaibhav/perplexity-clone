@@ -52,7 +52,6 @@ export default function MessageContent({ content, searchResults = [], vocabulary
       });
       
       if (foundWords.length > 0) {
-        console.log(`🎯 Found ${foundWords.length} vocabulary words:`, foundWords);
       }
       
       if (!found) {
@@ -60,38 +59,27 @@ export default function MessageContent({ content, searchResults = [], vocabulary
         // Pattern 1: Word followed by literal Unicode names in brackets
         // First, let's check if the pattern exists
         if (processed.includes('⟨ZWNJ⟩⟨ZWJ⟩')) {
-          console.log('🔍 Found bracket notation in content');
           
           // Find the word immediately before the markers
           // This pattern looks for any word characters followed by any non-letter characters, then the markers
           const bracketPattern = /(\w+)([^a-zA-Z]*)⟨ZWNJ⟩⟨ZWJ⟩/g;
           
           processed = processed.replace(bracketPattern, (match, word, punctuation, offset) => {
-            console.log('🔍 Found vocabulary word with bracket notation:', word);
-            console.log('   Full match:', match);
-            console.log('   Punctuation:', punctuation);
             found = true;
             foundWords.push(word);
             return `<vocabword data-word="${word}" data-thread-item-id="${threadItemId}">${word}</vocabword>${punctuation}`;
           });
           
           if (foundWords.length > 0) {
-            console.log(`🎯 Marked vocabulary word with bracket notation: ${foundWords.join(', ')}`);
           }
         }
         
         if (!found && processed.includes('\u200C')) {
-          console.log('🔍 Content contains ZWNJ but not in expected pattern');
           // Debug: find what's actually after the ZWNJ
           const debugIndex = processed.indexOf('\u200C');
           if (debugIndex !== -1) {
             const before = processed.substring(Math.max(0, debugIndex - 20), debugIndex);
             const after = processed.substring(debugIndex + 1, Math.min(processed.length, debugIndex + 5));
-            console.log('Context around ZWNJ:', 
-              'Before:', JSON.stringify(before),
-              'After:', JSON.stringify(after),
-              'Char after ZWNJ:', processed.charCodeAt(debugIndex + 1).toString(16)
-            );
           }
         }
       }

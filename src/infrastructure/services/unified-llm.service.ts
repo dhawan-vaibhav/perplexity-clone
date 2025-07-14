@@ -19,10 +19,8 @@ export class UnifiedLLMService implements ILLMService {
   private readonly promptService: PromptTemplateService;
 
   constructor() {
-    console.log('🔍 UnifiedLLMService: Starting initialization');
     try {
       this.promptService = new PromptTemplateService();
-      console.log('✅ UnifiedLLMService: PromptTemplateService created successfully');
     } catch (error) {
       console.error('❌ UnifiedLLMService: Failed to create PromptTemplateService:', error);
       console.error('Error details:', {

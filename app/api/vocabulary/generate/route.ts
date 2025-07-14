@@ -69,7 +69,6 @@ export async function POST(request: NextRequest) {
     );
     
     if (existingEntry) {
-      console.log(`✅ Using cached vocabulary for word: ${word}`);
       return Response.json(existingEntry.content);
     }
 
@@ -77,7 +76,6 @@ export async function POST(request: NextRequest) {
     const existingWordEntry = await vocabularyRepository.findByWordAndUser(word, userId);
     
     if (existingWordEntry) {
-      console.log(`🔄 Word exists for user, reusing content: ${word}`);
       
       // Create new entry linking to this threadItem but reuse content
       // This will now use UPSERT, so no duplicate key error
@@ -92,7 +90,6 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Generate new vocabulary content via LLM
-    console.log(`🎯 Generating new vocabulary content for: ${word}`);
     
     const prompt = VOCABULARY_GENERATION_PROMPT
       .replace('{word}', word)
@@ -147,7 +144,6 @@ export async function POST(request: NextRequest) {
         content: vocabularyContent
       });
 
-      console.log(`💾 Saved vocabulary entry: ${word}`);
       return Response.json(vocabularyContent);
       
     } catch (llmError) {

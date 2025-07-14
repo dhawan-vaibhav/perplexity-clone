@@ -13,26 +13,19 @@ export class PromptTemplateService {
   private templates: Map<string, nunjucks.Template> = new Map();
 
   constructor() {
-    console.log('🔍 PromptTemplateService: Starting initialization');
     
     try {
-      console.log('Loading template files...');
       
       // Pre-load and compile templates
       const templatePath = path.join(process.cwd(), 'src', 'prompts', 'search-basic.njk');
-      console.log('Template path:', templatePath);
       
       const templateContent = fs.readFileSync(templatePath, 'utf8');
-      console.log('Template loaded, length:', templateContent.length);
       
       // Compile the template directly - just like in the working example
-      console.log('About to compile template...');
-      console.log('nunjucks.compile type:', typeof nunjucks.compile);
       
       const compiledTemplate = nunjucks.compile(templateContent);
       this.templates.set('search-basic.njk', compiledTemplate);
       
-      console.log('✅ PromptTemplateService: Template compiled successfully');
     } catch (error) {
       console.error('❌ PromptTemplateService: Failed to initialize:', error);
       throw error;

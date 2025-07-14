@@ -56,13 +56,11 @@ export default function DiscoverPage() {
         if (cachedData) {
           const parsedData = JSON.parse(cachedData);
           if (parsedData[categoryId]) {
-            console.log(`🎯 Using cached data for category: ${categoryId}`);
             return parsedData[categoryId];
           }
         }
       }
 
-      console.log(`🌐 Fetching fresh data for category: ${categoryId}`);
       
       const res = await fetch(`/api/discover?category=${categoryId}`, {
         method: 'GET',
@@ -83,7 +81,6 @@ export default function DiscoverPage() {
         const allData = cachedData ? JSON.parse(cachedData) : {};
         allData[categoryId] = data.blogs;
         sessionStorage.setItem(dataKey, JSON.stringify(allData));
-        console.log(`💾 Cached data for category: ${categoryId}`);
       }
       
       return data.blogs;
@@ -111,7 +108,6 @@ export default function DiscoverPage() {
           
           // Only load cached data if we have the top category
           if (parsedData.top) {
-            console.log('📋 Loading discover data from session cache');
             setDiscoverData(parsedData);
             setCategories(parsedCategories);
             setHasLoadedData(true);
@@ -121,7 +117,6 @@ export default function DiscoverPage() {
         }
       }
       
-      console.log('🌐 Fetching initial discover data (top category only)');
       
       // Fetch top category and available categories
       const res = await fetch(`/api/discover?category=top`, {
@@ -147,7 +142,6 @@ export default function DiscoverPage() {
       if (dataKey && categoriesKey) {
         sessionStorage.setItem(dataKey, JSON.stringify({ top: data.blogs }));
         sessionStorage.setItem(categoriesKey, JSON.stringify(data.availableCategories));
-        console.log('💾 Cached initial discover data');
       }
     } catch (error) {
       console.error('Error initializing discover page:', error);

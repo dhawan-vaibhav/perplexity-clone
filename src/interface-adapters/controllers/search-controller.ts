@@ -145,7 +145,6 @@ export const createSearchController =
         let match;
         while ((match = invisibleMarkerRegex.exec(fullResponse)) !== null) {
           const word = match[1];
-          console.log('🔍 Server: Found vocabulary word with invisible markers:', word);
           vocabulary.push({
             word,
             position: match.index,
@@ -158,7 +157,6 @@ export const createSearchController =
           const bracketPattern = /(\b\w+)⟨ZWNJ⟩⟨ZWJ⟩/g;
           while ((match = bracketPattern.exec(fullResponse)) !== null) {
             const word = match[1];
-            console.log('🔍 Server: Found vocabulary word with bracket notation:', word);
             vocabulary.push({
               word,
               position: match.index,
@@ -167,11 +165,6 @@ export const createSearchController =
           }
         }
         
-        if (vocabulary.length === 0) {
-          console.log('🔍 Server: No vocabulary found');
-        } else {
-          console.log(`🎯 Server: Found ${vocabulary.length} vocabulary words:`, vocabulary.map(v => v.word));
-        }
 
         // Step 7: Complete thread item with original response (LLM already added markers)
         const completedItem = await manageThreadItemUseCase.completeItemWithCitationsAndVocabulary(
