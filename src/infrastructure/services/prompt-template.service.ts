@@ -13,11 +13,15 @@ export class PromptTemplateService {
 
   constructor() {
     const templatePath = path.join(process.cwd(), 'src', 'prompts');
-    this.env = nunjucks.configure(templatePath, {
-      autoescape: false,
-      trimBlocks: true,
-      lstripBlocks: true,
-    });
+    // Create environment instance directly
+    this.env = new nunjucks.Environment(
+      new nunjucks.FileSystemLoader(templatePath),
+      {
+        autoescape: false,
+        trimBlocks: true,
+        lstripBlocks: true,
+      }
+    );
   }
 
   renderTemplate(templateName: string, variables: PromptVariables): string {
