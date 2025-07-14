@@ -9,7 +9,7 @@ An advanced AI-powered search assistant that combines real-time web search with 
 
 ## 🌟 Features
 
-[https://youtu.be/wH8fwJRbyMw](https://youtu.be/wH8fwJRbyMw)
+[![Demo](https://img.youtube.com/vi/wH8fwJRbyMw/maxresdefault.jpg)](https://youtu.be/wH8fwJRbyMw)
 
 ### Core Search Functionality
 - **AI-Powered Responses**: Leverages Google's Gemini 1.5 Flash model for intelligent, context-aware answers
