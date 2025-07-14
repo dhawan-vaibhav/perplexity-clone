@@ -25,14 +25,10 @@ export class PromptTemplateService {
       const templateContent = fs.readFileSync(templatePath, 'utf8');
       console.log('Template loaded, length:', templateContent.length);
       
-      // Configure nunjucks without FileSystemLoader
-      nunjucks.configure({ 
-        autoescape: false,
-        trimBlocks: true,
-        lstripBlocks: true,
-      });
+      // Compile the template directly - just like in the working example
+      console.log('About to compile template...');
+      console.log('nunjucks.compile type:', typeof nunjucks.compile);
       
-      // Compile the template
       const compiledTemplate = nunjucks.compile(templateContent);
       this.templates.set('search-basic.njk', compiledTemplate);
       
