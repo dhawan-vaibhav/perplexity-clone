@@ -1,4 +1,4 @@
-import * as nunjucks from 'nunjucks';
+import nunjucks from 'nunjucks';
 import path from 'path';
 import { SearchResult } from '../../entities/models/thread-item';
 
