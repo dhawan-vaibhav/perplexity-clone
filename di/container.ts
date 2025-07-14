@@ -1,11 +1,7 @@
 // di/container.ts (Updated with Citation Service)
-console.log('🔍 Container - Starting initialization');
 import 'reflect-metadata';
-console.log('🔍 Container - reflect-metadata imported');
 import { Container } from 'inversify';
-console.log('🔍 Container - inversify imported');
 import { SYMBOLS } from './symbols';
-console.log('🔍 Container - SYMBOLS imported');
 
 // Interfaces
 import { IThreadRepository } from '../src/application/repositories/IThreadRepository';
@@ -34,12 +30,9 @@ import { GetThreadItemsUseCase } from '../src/application/use-cases/search/GetTh
 import { createSearchController, ISearchController } from '../src/interface-adapters/controllers/search-controller';
 import { createThreadItemsController, IThreadItemsController } from '../src/interface-adapters/controllers/thread-items-controller';
 
-console.log('🔍 Container - Creating new Container instance');
 const container = new Container();
-console.log('🔍 Container - Container instance created');
 
 // Bind Repositories
-console.log('🔍 Container - Binding repositories...');
 container.bind<IThreadRepository>(SYMBOLS.ThreadRepository).to(ThreadsRepository);
 container.bind<IThreadItemRepository>(SYMBOLS.ThreadItemRepository).to(ThreadItemsRepository);
 container.bind<IVocabularyRepository>(SYMBOLS.VocabularyRepository).to(VocabularyRepository);
