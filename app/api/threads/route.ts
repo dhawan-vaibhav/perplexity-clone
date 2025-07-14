@@ -7,6 +7,14 @@ import { IThreadRepository } from '../../../src/application/repositories/IThread
 
 export async function GET(request: NextRequest) {
   try {
+    // Temporary debug logging
+    console.log('🔍 Environment check in /api/threads:', {
+      NODE_ENV: process.env.NODE_ENV,
+      hasDbUrl: !!process.env.DATABASE_URL,
+      hasClerkKey: !!process.env.CLERK_SECRET_KEY,
+      envKeys: Object.keys(process.env).filter(k => !k.includes('SECRET') && !k.includes('KEY') && !k.includes('PASSWORD')),
+    });
+
     // Get the userId from Clerk auth
     const { userId } = await auth();
     
