@@ -289,12 +289,7 @@ export default function DiscoverPage() {
               value={category.id}
               className="relative px-4 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 bg-transparent border-b-2 border-transparent hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 data-[state=active]:text-gray-900 dark:data-[state=active]:text-white data-[state=active]:border-gray-900 dark:data-[state=active]:border-white data-[state=active]:bg-transparent transition-all duration-200 rounded-none"
             >
-              <span className="flex items-center gap-2">
-                {category.name}
-                {loadingCategories.has(category.id) && (
-                  <div className="animate-spin h-3 w-3 border border-current border-t-transparent rounded-full"></div>
-                )}
-              </span>
+              {category.name}
             </TabsTrigger>
           ))}
         </TabsList>
